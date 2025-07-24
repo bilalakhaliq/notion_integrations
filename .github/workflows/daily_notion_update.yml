@@ -1,0 +1,25 @@
+name: Daily Notion Update
+
+on:
+  schedule:
+    - cron: "0 20 * * *" # Runs every day at 1:00 am Pakistan time (20:00 UTC)
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt || pip install notion-client
+      - name: Run Notion update script
+        env:
+          NOTION_KEY: ${{ secrets.NOTION_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python misc_utils/updt_to_yest.py
