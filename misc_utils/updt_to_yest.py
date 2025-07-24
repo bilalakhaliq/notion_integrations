@@ -2,14 +2,14 @@ import os
 from notion_client import Client
 from datetime import datetime, timedelta
 import json
-import pytz
+from zoneinfo import ZoneInfo
 
 # Load environment variables
 NOTION_KEY = os.getenv('NOTION_KEY')
 NOTION_DATABASE_ID = os.getenv('NOTION_DATABASE_ID')
 
 # Define Pakistan timezone
-PKT = pytz.timezone('Asia/Karachi')
+PKT = ZoneInfo("Asia/Karachi")
 
 # Get current time in Pakistan
 now_pkt = datetime.now(PKT)
