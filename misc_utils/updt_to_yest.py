@@ -2,10 +2,19 @@ import os
 from notion_client import Client
 from datetime import datetime, timedelta
 import json
+import pytz
 
 # Load environment variables
 NOTION_KEY = os.getenv('NOTION_KEY')
 NOTION_DATABASE_ID = os.getenv('NOTION_DATABASE_ID')
+
+# Define Pakistan timezone
+PKT = pytz.timezone('Asia/Karachi')
+
+# Get current time in Pakistan
+now_pkt = datetime.now(PKT)
+yesterday_pkt = (now_pkt - timedelta(days=1)).strftime("%Y-%m-%d")
+today_pkt = now_pkt.strftime("%Y-%m-%d")
 
 # Initialize the Notion client
 notion = Client(auth=NOTION_KEY)
@@ -46,8 +55,8 @@ def shift_date_preserving_time(dt_str, new_date):
 
 if __name__ == "__main__":
     property_name = "Date-Time"
-    yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
-    today = datetime.now().strftime("%Y-%m-%d")
+    yesterday = yesterday_pkt
+    today = today_pkt
 
     # Query all pages with a date for yesterday
     pages = get_pages_for_date(NOTION_DATABASE_ID, property_name, yesterday)

@@ -2,7 +2,7 @@ name: Daily Notion Update
 
 on:
   schedule:
-    - cron: "0 20 * * *" # Runs every day at 1:00 am Pakistan time (20:00 UTC)
+    - cron: "14 20 * * *" # Runs every day at 1:00 am Pakistan time (20:00 UTC)
   workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
