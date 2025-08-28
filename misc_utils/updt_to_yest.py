@@ -3,6 +3,10 @@ from notion_client import Client
 from datetime import datetime, timedelta
 import json
 from zoneinfo import ZoneInfo
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Load environment variables
 NOTION_KEY = os.getenv('NOTION_KEY')

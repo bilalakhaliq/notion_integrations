@@ -2,6 +2,10 @@ import os
 import time
 import requests
 from notion_client import Client
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Load environment variables (ensure you have NOTION_KEY and NOTION_DATABASE_ID set)
 NOTION_KEY = os.getenv('NOTION_KEY')

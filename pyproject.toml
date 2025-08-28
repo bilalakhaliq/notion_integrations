@@ -7,5 +7,6 @@ requires-python = ">=3.12"
 dependencies = [
     "ipykernel>=6.30.0",
     "notion-client>=2.4.0",
+    "python-dotenv>=1.1.1",
     "pytz>=2025.2",
 ]
