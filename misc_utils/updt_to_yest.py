@@ -5,12 +5,20 @@ import json
 from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables from .env file (for local development)
+# In GitHub Actions, environment variables are already set via secrets
+# load_dotenv() will only load if .env exists and won't override existing env vars
 load_dotenv()
 
-# Load environment variables
+# Load environment variables (works for both local .env and GitHub Actions secrets)
 NOTION_KEY = os.getenv("NOTION_KEY")
 NOTION_DATABASE_ID = os.getenv("NOTION_DATABASE_ID")
+
+# Validate that required environment variables are set
+if not NOTION_KEY:
+    raise ValueError("NOTION_KEY environment variable is not set")
+if not NOTION_DATABASE_ID:
+    raise ValueError("NOTION_DATABASE_ID environment variable is not set")
 
 # Define Pakistan timezone
 PKT = ZoneInfo("Asia/Karachi")
