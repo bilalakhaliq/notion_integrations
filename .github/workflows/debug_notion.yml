@@ -1,0 +1,58 @@
+name: Debug Notion Connection
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install notion-client python-dotenv
+      
+      - name: Debug Notion connection
+        env:
+          NOTION_KEY: ${{ secrets.NOTION_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: |
+          python << 'PYEOF'
+          import os
+          from notion_client import Client
+          
+          key = os.getenv("NOTION_KEY")
+          db_id = os.getenv("NOTION_DATABASE_ID")
+          
+          print(f"Key length: {len(key) if key else 0}")
+          print(f"Key starts with: {key[:10] if key else 'NONE'}...")
+          print(f"DB ID: {db_id}")
+          
+          notion = Client(auth=key)
+          
+          try:
+              me = notion.users.me()
+              print(f"\n✅ Connected as: {me.get('name', 'Unknown')}")
+              print(f"   Bot ID: {me.get('id')}")
+          except Exception as e:
+              print(f"\n❌ Auth failed: {e}")
+              exit(1)
+          
+          try:
+              db = notion.databases.retrieve(database_id=db_id)
+              print(f"\n✅ Database found: {db.get('title', [{}])[0].get('plain_text', 'Untitled')}")
+          except Exception as e:
+              print(f"\n❌ Database access failed: {e}")
+              exit(1)
+          PYEOF
