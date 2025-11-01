@@ -40,17 +40,11 @@ def get_pages_from_past_month(database_id, property_name, today_date, cutoff_dat
             {"property": property_name, "date": {"on_or_after": cutoff_date}},
         ]
     }
-    # In notion-client 2.7.0+, databases use data_sources.query()
-    # Try data_sources first (new API), fallback to databases (old API)
-    try:
-        response = notion.data_sources.query(data_source_id=database_id, filter=filter_obj)
-    except (AttributeError, Exception):
-        # Fallback for older API versions that use databases.query
-        try:
-            response = notion.databases.query(database_id=database_id, filter=filter_obj)
-        except AttributeError:
-            # Last resort for very old versions
-            response = notion.databases.query(**{"database_id": database_id, "filter": filter_obj})
+
+    # notion-client 2.4.0 uses databases.query()
+    response = notion.databases.query(
+        **{"database_id": database_id, "filter": filter_obj}
+    )
     return response["results"]
 
 
