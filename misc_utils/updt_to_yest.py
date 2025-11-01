@@ -40,7 +40,7 @@ def get_pages_from_past_month(database_id, property_name, today_date, cutoff_dat
             {"property": property_name, "date": {"on_or_after": cutoff_date}},
         ]
     }
-    response = notion.databases.query(database_id=database_id, filter=filter_obj)
+    response = notion.databases.query(**{"database_id": database_id, "filter": filter_obj})
     return response["results"]
 
 
