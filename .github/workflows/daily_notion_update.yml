@@ -2,8 +2,16 @@ name: Daily Notion Update
 
 on:
   schedule:
-    - cron: "33 20 * * *" # Runs every day at 1:00 am Pakistan time (20:00 UTC)
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+    - cron: "33 20 * * *" # Runs every day at 1:33 am Pakistan time (20:33 UTC)
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: false
+        default: 'info'
+
+permissions:
+  contents: read
 
 jobs:
   run-script:
