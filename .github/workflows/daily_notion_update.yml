@@ -11,7 +11,7 @@ on:
         default: 'info'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   run-script:
@@ -35,3 +35,22 @@ jobs:
           NOTION_KEY: ${{ secrets.NOTION_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
         run: python misc_utils/updt_to_yest.py
+
+      - name: Keep repository active monthly
+        if: github.event_name == 'schedule'
+        run: |
+          DAY_OF_MONTH="$(date -u +%d)"
+          if [ "$DAY_OF_MONTH" != "01" ]; then
+            echo "Not the first day of the month; skipping keepalive commit."
+            exit 0
+          fi
+
+          mkdir -p .github/keepalive
+          echo "last-keepalive-utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" > .github/keepalive/daily_notion_update_heartbeat.txt
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .github/keepalive/daily_notion_update_heartbeat.txt
+          git commit -m "chore: monthly workflow keepalive" || exit 0
+          git push
